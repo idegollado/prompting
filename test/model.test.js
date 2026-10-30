@@ -1,0 +1,7 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {seed,newVersion,score,suggestions,compile,factors} from '../public/model.js';
+test('new versions preserve the original snapshot and start separate evaluations',()=>{const p=seed().prompts[0];const original=structuredClone(p.versions[0]);const next=newVersion(p,{...original,tasks:'Improved steps'},'Clarified task');p.versions.push(next);next.evaluations.push({});assert.deepEqual(p.versions[0],original);assert.equal(next.number,2);assert.notEqual(next.id,original.id);assert.equal(next.tasks,'Improved steps');});
+test('required content cannot be blank',()=>{assert.throws(()=>newVersion({versions:[]},{title:' ',objectives:'goal',tasks:'task'},''),/required/);});
+test('scoring includes every factor and generates targeted improvements',()=>{const ratings=Object.fromEntries(Object.keys(factors).map(k=>[k,5]));assert.equal(score({ratings}),100);assert.deepEqual(suggestions({ratings}),[]);ratings.clarity=1;ratings.correctness=2;assert.equal(score({ratings}),77);assert.deepEqual(suggestions({ratings}),[factors.clarity[1],factors.correctness[1]]);});
+test('compiled prompts contain the five structured sections',()=>{const v=seed().prompts[0].versions[0];const text=compile(v);assert.match(text,/ROLE\n/);assert.match(text,/OBJECTIVES\n/);assert.match(text,/CONTEXT\n/);assert.match(text,/TASKS\n/);assert.match(text,/EXAMPLES\n/);assert.ok(text.includes('{{transcript}}'));});
