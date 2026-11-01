@@ -51,3 +51,41 @@ For example, create a **QA Lead** role, give it the relevant saved skills, then 
 Planning records use the existing browser storage and JSON backup/restore. Older backups receive empty role and workflow collections without rewriting prompt histories or examples. Imports validate planning references before replacing the library. Backups containing planning data should be restored with this version of Promptfolio or newer.
 
 Run `npm test` for model, documentation, migration, and planning-reference checks. With the app running and Chromium/Playwright available, run `npm run test:browser` for existing functionality and `npm run test:planning` for project context, role skills, ordered release planning, editing, version pinning, reload persistence, backup round trips, legacy imports, invalid reference rejection, and mobile layouts. Both browser commands support `APP_URL` and `CHROMIUM_PATH`.
+
+### Role imports and context filters
+
+In **Roles**, use **Import roles**, then **Download template**, or start with
+[`examples/roles-template.json`](examples/roles-template.json). Select your JSON file
+(under 1 MB), review every role in the preview, and click **Add imported roles**.
+Closing the dialog adds nothing. Import adds new records with new IDs; it never
+updates existing roles, even if an imported name or ID matches one in your library.
+Importing the same file twice deliberately creates another set of roles.
+
+The JSON envelope is `{"format":"promptfolio-roles","version":1,"roles":[...]}`.
+Each role requires a non-empty `name`. Optional `expertise` and `boundaries` are
+text; `responsibilities` and `activities` accept arrays of text or legacy text.
+`skills`, `projects`, and `tags` are optional arrays of unique, non-empty strings
+and default to empty lists. IDs and unrecognized fields on imported roles are
+ignored. Project and skill entries must be existing IDs from the current library;
+the import dialog lists these IDs. Unknown references reject the entire file
+without adding roles. Leave those arrays empty when sharing between libraries,
+then edit the roles to assign local projects and skills. Skills themselves and
+their version histories are never imported or modified by role import.
+
+Use **Edit role** to choose zero or more projects and enter tags (one per line)
+(for example, company or team names). Roles with no projects remain reusable;
+assignments are metadata and do not restrict workflow role choices. Existing roles
+without this metadata behave as unassigned and untagged. Metadata persists through
+reload and backup/restore; invalid project references or malformed metadata cause
+backup validation to fail.
+
+The Roles toolbar combines an exact project filter, an exact tag filter, and
+**Unassigned roles only** using AND. All projects and all tags show every role by
+default. A specific project shows explicitly assigned roles; use the unassigned
+filter with All projects to find reusable roles. The result count explains empty
+results. Filters reset when leaving or refreshing the view and do not alter roles.
+
+Run `npm run test:roles` with the app running to validate role import previews,
+cancellation, references, metadata editing, filters, persistence, backups, legacy
+roles, and mobile layout. It uses the same Playwright and Chromium setup as the
+other browser suites.

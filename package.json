@@ -8,7 +8,8 @@
     "dev": "node --watch server.js",
     "test": "node --test",
     "test:browser": "node scripts/browser-smoke.cjs",
-    "test:planning": "node scripts/planning-smoke.cjs"
+    "test:planning": "node scripts/planning-smoke.cjs",
+    "test:roles": "node scripts/roles-smoke.cjs"
   },
   "engines": {
     "node": ">=22"

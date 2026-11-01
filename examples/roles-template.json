@@ -1,0 +1,16 @@
+{
+  "format": "promptfolio-roles",
+  "version": 1,
+  "roles": [
+    {
+      "name": "QA Lead",
+      "responsibilities": ["Assess release quality", "Review release evidence"],
+      "expertise": "Risk assessment and test strategy",
+      "activities": ["Review defects", "Assess test coverage"],
+      "boundaries": "Escalate release approval to the release manager",
+      "skills": [],
+      "projects": [],
+      "tags": ["example-company", "quality"]
+    }
+  ]
+}
